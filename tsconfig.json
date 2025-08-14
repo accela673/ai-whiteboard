@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    /* Файловая структура */
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    /* Среда исполнения */
+    "target": "ES2020",        // хороший баланс между новизной и стабильностью
+    "module": "commonjs",      // для Node.js + Express
+    "lib": ["ES2020"],
+    "types": ["node"],
+
+    /* Исходные карты и декларации */
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    /* Строгие проверки */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    /* Стиль */
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    /* Прочее */
+    "esModuleInterop": true,   // чтобы можно было `import express from "express"`
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
