@@ -8,14 +8,17 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  rooms     Room[]   @relation("UserRooms")
-  messages  Message[] @relation("UserMessages")  // <--- добавили
-  createdAt DateTime @default(now())
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  password      String
+  isVerified    Boolean  @default(false)
+  verifyToken   String?  @unique
+  createdAt     DateTime @default(now())
+  rooms         Room[]   @relation("UserRooms")
+  messages      Message[] @relation("UserMessages")
 }
+
 
 model Room {
   id        String      @id @default(cuid())
