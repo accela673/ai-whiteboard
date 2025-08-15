@@ -8,7 +8,7 @@ const router = Router();
 
 /**
  * @swagger
- * /auth/register:
+ * /api/auth/register:
  *   post:
  *     summary: Регистрация нового пользователя
  *     tags: [Auth]
