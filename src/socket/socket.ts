@@ -4,36 +4,42 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export function setupSockets(io: Server) {
-  io.on("connection", (socket: Socket) => {
-    console.log(`User connected: ${socket.id}`);
+io.on("connection", (socket) => {
+  console.log(`User connected: ${socket.id}`);
 
-    socket.on("join_room", async (roomId: string) => {
-      socket.join(roomId);
-      console.log(`User ${socket.id} joined room ${roomId}`);
+  socket.on("join_room", async (roomId: string) => {
+    socket.join(roomId);
 
-      const lines = await prisma.line.findMany({
-        where: { boardId: Number(roomId) },
-      });
-      socket.emit("load_lines", lines);
+    const linesFromDb = await prisma.line.findMany({
+      where: { boardId: Number(roomId) },
+      orderBy: { id: "asc" },
     });
 
-    socket.on("draw", async (data) => {
-      const { roomId, line } = data;
-      const savedLine = await prisma.line.create({
-        data: {
-          boardId: Number(roomId),
-          points: line.points,
-          color: line.color,
-          strokeWidth: line.strokeWidth,
-          tool: line.tool,
-        },
-      });
+    // Преобразуем points в массив, если вдруг это JSON-строка
+    const formattedLines = linesFromDb.map(l => ({
+      ...l,
+      points: Array.isArray(l.points) ? l.points : JSON.parse(l.points as any),
+    }));
 
-      io.to(roomId).emit("draw", savedLine);
+    socket.emit("load_lines", formattedLines);
+  });
+
+  socket.on("draw", async ({ roomId, line }) => {
+    const savedLine = await prisma.line.create({
+      data: {
+        boardId: Number(roomId),
+        points: line.points,
+        color: line.color,
+        strokeWidth: line.strokeWidth,
+        tool: line.tool,
+      },
     });
 
-    socket.on("disconnect", () => {
-      console.log(`User disconnected: ${socket.id}`);
+    io.to(roomId).emit("draw", {
+      ...savedLine,
+      points: Array.isArray(savedLine.points) ? savedLine.points : JSON.parse(savedLine.points as any),
     });
   });
-}
+
+  socket.on("disconnect", () => console.log(`User disconnected: ${socket.id}`));
+});}
