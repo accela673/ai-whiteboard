@@ -3,39 +3,55 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" // или "postgresql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id            String   @id @default(cuid())
-  name          String
-  email         String   @unique
-  password      String
-  isVerified    Boolean  @default(false)
-  verifyToken   String?  @unique
-  createdAt     DateTime @default(now())
-  rooms         Room[]   @relation("UserRooms")
-  messages      Message[] @relation("UserMessages")
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  password     String
+  isVerified   Boolean   @default(false)
+  verifyToken  String?   @unique
+  createdAt    DateTime  @default(now())
+  rooms        Room[]    @relation("UserRooms")
+  messages     Message[] @relation("UserMessages")
 }
-
 
 model Room {
-  id        String      @id @default(cuid())
+  id        Int       @id @default(autoincrement())
   name      String
-  users     User[]      @relation("UserRooms")
+  users     User[]    @relation("UserRooms")
   messages  Message[]
-  createdAt DateTime    @default(now())
+  createdAt DateTime  @default(now())
 }
 
-
 model Message {
-  id        String   @id @default(cuid())
+  id        Int      @id @default(autoincrement())
   room      Room     @relation(fields: [roomId], references: [id])
-  roomId    String
+  roomId    Int
   sender    User     @relation("UserMessages", fields: [senderId], references: [id])
-  senderId  String
+  senderId  Int
   content   String
   isAI      Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model Whiteboard {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  lines     Line[]
+}
+
+model Line {
+  id          Int        @id @default(autoincrement())
+  points      Json
+  color       String
+  strokeWidth Int
+  tool        String
+  boardId     Int
+  board       Whiteboard @relation(fields: [boardId], references: [id])
 }
