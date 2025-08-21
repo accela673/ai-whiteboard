@@ -79,25 +79,13 @@ Allows drawing, writing notes, sharing ideas, and making edits in real time, whi
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/username/real-time-ai-whiteboard.git
-cd real-time-ai-whiteboard
-```
-
-### 2️⃣ Install dependencies
-Backend:
-```bash
-cd backend
-npm install
-```
-
-Frontend:
-```bash
-cd frontend
+git clone https://github.com/accela673/ai-whiteboard.git
+cd ai-whiteboard
 npm install
 ```
 
 ### 3️⃣ Set up environment variables
-Create `.env` files in `/backend` and `/frontend`.
+Create `.env` file
 
 Example for backend:
 ```
