@@ -98,13 +98,11 @@ OPENAI_API_KEY=your_openai_api_key
 ### 4️⃣ Run in development mode
 Backend:
 ```bash
-cd backend
 npm run dev
 ```
 
 Frontend:
 ```bash
-cd frontend
 npm start
 ```
 
